@@ -245,3 +245,122 @@ footer p {
     font-size: 1rem;
   }
 }
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 2px;
+  width: 100%;
+  max-width: 80vmin;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(
+    145deg,
+    rgba(10, 20, 30, 0.9),
+    rgba(20, 40, 60, 0.9)
+  );
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow:
+    0 0 30px rgba(0, 0, 0, 0.5),
+    inset 0 0 15px rgba(74, 158, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-cell {
+  background: linear-gradient(
+    145deg,
+    rgba(30, 60, 90, 0.8),
+    rgba(20, 40, 60, 0.8)
+  );
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-cell::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  animation: cell-shine 3s linear infinite;
+}
+
+@keyframes cell-shine {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+.game-cell:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(40, 80, 120, 0.8),
+    rgba(30, 60, 90, 0.8)
+  );
+  box-shadow: 0 0 20px rgba(74, 158, 255, 0.3);
+}
+
+.game-cell:active {
+  background: linear-gradient(
+    145deg,
+    rgba(20, 40, 60, 0.8),
+    rgba(10, 20, 30, 0.8)
+  );
+  transform: translateY(1px);
+  box-shadow: 0 0 10px rgba(74, 158, 255, 0.2);
+}
+
+.game-cell.hit {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 0, 0, 0.8),
+    rgba(150, 0, 0, 0.8)
+  );
+}
+
+.game-cell.miss {
+  background: linear-gradient(
+    145deg,
+    rgba(100, 100, 100, 0.8),
+    rgba(80, 80, 80, 0.8)
+  );
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#place-text {
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #4a9eff;
+  text-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+  margin-bottom: 2rem;
+  animation: text-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes text-glow {
+  from {
+    text-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+  }
+  to {
+    text-shadow: 0 0 25px rgba(74, 158, 255, 0.8);
+  }
+}
