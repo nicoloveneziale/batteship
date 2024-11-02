@@ -5,7 +5,7 @@ function renderBoard(gameBoard) {
     for (const x in gameBoard.board[y]) {
       const button = document.createElement("button");
       button.classList.add("game-cell");
-      button.id = x + y;
+      button.id = "" + x + y;
       gameGrid.appendChild(button);
     }
   }
