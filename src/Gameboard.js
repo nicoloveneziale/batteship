@@ -79,7 +79,6 @@ class Gameboard {
   }
 
   isValidPlace(x, y, ship, direction) {
-    console.log("valid");
     if (x < 0 || y < 0 || x >= 10 || y >= 10) {
       return false;
     }

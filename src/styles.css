@@ -338,11 +338,17 @@ footer p {
   );
 }
 
-.flex {
+.flex-col {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #place-text {

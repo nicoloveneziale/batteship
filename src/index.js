@@ -30,13 +30,13 @@ startButton.addEventListener("click", () => {
   };
 
   body.innerHTML = "";
-  const selectionGameGrid = renderBoard(gameState.player.gameBoard);
+  const selectionGameGrid = renderBoard(gameState.player.gameBoard, true);
   const placeText = document.createElement("p");
   placeText.innerHTML = `Place your ships ${name}!`;
   placeText.id = "place-text";
 
   body.append(placeText, selectionGameGrid);
-  body.classList.add("flex");
+  body.classList.add("flex-col");
 
   function handleRotation(event) {
     if (event.key.toLowerCase() === "r") {
@@ -73,6 +73,45 @@ startButton.addEventListener("click", () => {
     } else {
       placeText.innerHTML = "All ships placed! Game starting...";
       window.removeEventListener("keypress", handleRotation);
+
+      body.innerHTML = "";
+      body.classList.remove("flex-col");
+      body.classList.add("flex-row");
+      body.append(selectionGameGrid);
+
+      let computerShips = [
+        new Ship(5),
+        new Ship(4),
+        new Ship(3),
+        new Ship(3),
+        new Ship(2),
+      ];
+
+      function getRandomInt(min, max) {
+        const minCeiled = Math.ceil(min);
+        const maxFloored = Math.floor(max);
+        return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
+      }
+
+      for (let s = 0; s < computerShips.length; s++) {
+        let ship = computerShips[s];
+        let placed = false;
+        while (!placed) {
+          let direction = "vertical";
+          if (Math.random() == 0) {
+            direction = "horizontal";
+          }
+          placed = gameState.computer.gameBoard.placeShip(
+            getRandomInt(1, 10),
+            getRandomInt(1, 10),
+            ship,
+            direction,
+          );
+        }
+      }
+
+      const computerGameGrid = renderBoard(gameState.computer.gameBoard, true);
+      body.append(computerGameGrid);
     }
   }
 
