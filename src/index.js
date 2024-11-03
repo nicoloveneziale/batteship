@@ -12,11 +12,21 @@ let name = "";
 
 startButton.addEventListener("click", () => {
   name = document.querySelector("#name").value;
+  const ships = [
+    new Ship(5),
+    new Ship(4),
+    new Ship(3),
+    new Ship(3),
+    new Ship(2),
+  ];
+
   const gameState = {
     direction: "horizontal",
-    currentShip: new Ship(4),
+    currentShipIndex: 0,
+    ships: ships,
     player: new Player(name),
     computer: new ComputerPlayer(),
+    removeListeners: null,
   };
 
   body.innerHTML = "";
@@ -33,21 +43,39 @@ startButton.addEventListener("click", () => {
       gameState.direction =
         gameState.direction === "horizontal" ? "vertical" : "horizontal";
 
-      gameState.removeListeners();
+      if (gameState.removeListeners) {
+        gameState.removeListeners();
+      }
 
-      gameState.removeListeners = handleShipPlacement();
+      if (gameState.currentShipIndex < gameState.ships.length) {
+        gameState.removeListeners = handleShipPlacement();
+      }
     }
   }
 
   function handleShipPlacement() {
     return placeShip(
       gameState.player,
-      gameState.currentShip,
+      gameState.ships[gameState.currentShipIndex],
       gameState.direction,
+      onShipPlaced,
     );
   }
 
-  gameState.removeListeners = handleShipPlacement();
+  function onShipPlaced() {
+    gameState.currentShipIndex++;
+
+    if (gameState.currentShipIndex < gameState.ships.length) {
+      const shipLength = gameState.ships[gameState.currentShipIndex].length;
+      placeText.innerHTML = `Place your ${shipLength}-unit ship, ${name}!`;
+
+      gameState.removeListeners = handleShipPlacement();
+    } else {
+      placeText.innerHTML = "All ships placed! Game starting...";
+      window.removeEventListener("keypress", handleRotation);
+    }
+  }
 
   window.addEventListener("keypress", handleRotation);
+  gameState.removeListeners = handleShipPlacement();
 });

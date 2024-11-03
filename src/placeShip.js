@@ -1,4 +1,4 @@
-function placeShip(player, ship, direction) {
+function placeShip(player, ship, direction, onShipPlaced) {
   const gridList = document.querySelectorAll(".game-cell");
   const gameBoard = player.gameBoard;
 
@@ -45,9 +45,7 @@ function placeShip(player, ship, direction) {
       parseInt(cellId.slice(1)),
     ];
 
-    gameBoard.placeShip(xVal, yVal, ship, direction);
-
-    if (gameBoard.isValidPlace(xVal, yVal, ship, direction)) {
+    if (gameBoard.placeShip(xVal, yVal, ship, direction) == true) {
       cell.classList.add("ship");
       const adjacentCells = getShipCells(xVal, yVal, ship, direction);
       adjacentCells.forEach((adjacentCell) => {
@@ -55,6 +53,7 @@ function placeShip(player, ship, direction) {
       });
 
       removeAllEventListeners();
+      if (onShipPlaced) onShipPlaced();
     }
   }
 
@@ -86,6 +85,7 @@ function placeShip(player, ship, direction) {
     cell.addEventListener("mouseleave", mouseleaveFn);
     cell.addEventListener("click", clickFn);
   });
+
   return removeAllEventListeners;
 }
 

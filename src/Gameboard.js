@@ -28,36 +28,71 @@ class Gameboard {
   }
 
   placeShip(x, y, ship, direction) {
-    if (this.isValidPlace(x, y, ship, direction) == true) {
-      if (ship.length == 1) {
-        this.changeCell(x, y, ship);
-        this.shipTiles++;
+    if (!this.isValidPlace(x, y, ship, direction)) {
+      return false;
+    }
+
+    if (ship.length === 1) {
+      this.changeCell(x, y, ship);
+      this.shipTiles++;
+    } else {
+      if (direction === "horizontal") {
+        for (let i = 0; i < ship.length; i++) {
+          this.changeCell(x + i, y, ship);
+          this.shipTiles++;
+        }
       } else {
-        if (direction == "horizontal") {
-          for (var i = 0; i < ship.length; i++) {
-            this.changeCell(x, y, ship);
-            x++;
-            this.shipTiles++;
-          }
-        } else {
-          for (var j = 0; j < ship.length; j++) {
-            this.changeCell(x, y, ship);
-            y++;
-            this.shipTiles++;
-          }
+        for (let j = 0; j < ship.length; j++) {
+          this.changeCell(x, y + j, ship);
+          this.shipTiles++;
         }
       }
     }
+    return true;
+  }
+
+  cellIntercept(x, y, ship, direction) {
+    if (x < 0 || x >= 10 || y < 0 || y >= 10) {
+      return true;
+    }
+
+    if (ship.length === 1) {
+      return this.board[y][x].length > 0;
+    }
+
+    if (direction === "horizontal") {
+      for (let i = 0; i < ship.length; i++) {
+        if (x + i >= 10) return true;
+        if (this.board[y][x + i].length > 0) {
+          return true;
+        }
+      }
+    } else {
+      for (let j = 0; j < ship.length; j++) {
+        if (y + j >= 10) return true;
+        if (this.board[y + j][x].length > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   isValidPlace(x, y, ship, direction) {
-    if (
-      (direction == "horizontal" && x + ship.length > 10) ||
-      (direction == "vertical" && y + ship.length > 10)
-    ) {
+    console.log("valid");
+    if (x < 0 || y < 0 || x >= 10 || y >= 10) {
       return false;
     }
-    return true;
+
+    if (direction === "horizontal" && x + ship.length > 10) {
+      console.log(93);
+      return false;
+    }
+    if (direction === "vertical" && y + ship.length > 10) {
+      return false;
+    }
+
+    return !this.cellIntercept(x, y, ship, direction);
   }
 
   receiveAttack(x, y) {
@@ -82,7 +117,7 @@ class Gameboard {
   }
 
   changeCell(x, y, content) {
-    this.board[y][x] = content;
+    this.board[y][x] = [content];
   }
 
   checkAllSunk() {
