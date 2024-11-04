@@ -96,12 +96,12 @@ class Gameboard {
 
   receiveAttack(x, y) {
     if (this.isValidAttack(x, y) == true) {
-      this.attacks[y][x] = true;
-      if (this.board[y][x].length != 0) {
-        const ship = this.board[y][x];
+      if (this.board[y][x].length > 0) {
+        const ship = this.board[y][x][0];
         ship.hit();
         ship.isSunk();
         this.shipTiles--;
+        this.attacks[y][x] = true;
         return true;
       }
       return false;

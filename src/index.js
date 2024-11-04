@@ -5,6 +5,7 @@ import placeShip from "./placeShip.js";
 import Player from "./Player";
 import Ship from "./Ship.js";
 import ComputerPlayer from "./ComputerPlayer.js";
+import handleAttack from "./handleAttack.js";
 
 const body = document.querySelector("body");
 renderEntryPage();
@@ -110,8 +111,37 @@ startButton.addEventListener("click", () => {
         }
       }
 
-      const computerGameGrid = renderBoard(gameState.computer.gameBoard, true);
+      function handleComputerAttack() {
+        let [x, y] = [getRandomInt(0, 9), getRandomInt(0, 9)];
+        while (gameState.player.gameBoard.isValidAttack(x, y) != true) {
+          [x, y] = [getRandomInt(0, 9), getRandomInt(0, 9)];
+        }
+        console.log("" + x + y);
+        if (gameState.player.gameBoard.receiveAttack(x, y) === true) {
+          document.getElementById("" + x + y).classList.add("hit");
+          handleComputerAttack();
+        } else {
+          document.getElementById("" + x + y).classList.add("miss");
+          if (
+            gameState.player.gameBoard.shipTiles > 0 &&
+            gameState.computer.gameBoard.shipTiles > 0
+          )
+            startAttacks();
+        }
+      }
+
+      const computerGameGrid = renderBoard(gameState.computer.gameBoard, false);
       body.append(computerGameGrid);
+
+      function startAttacks() {
+        const setPlayerAttack = handleAttack(
+          gameState.computer.gameBoard,
+          handleComputerAttack,
+        );
+        setPlayerAttack();
+      }
+
+      startAttacks();
     }
   }
 
