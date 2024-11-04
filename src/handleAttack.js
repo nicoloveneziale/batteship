@@ -1,4 +1,4 @@
-function handleAttack(gameBoard, onMiss) {
+function handleAttack(gameBoard, onMiss, checkWin) {
   const gridList = document.querySelectorAll(".game-cell");
 
   function setEventListeners() {
@@ -12,6 +12,7 @@ function handleAttack(gameBoard, onMiss) {
     const [x, y] = [cell.id.slice(0, 1), cell.id.slice(1)];
     if (gameBoard.receiveAttack(x, y) === true) {
       cell.classList.add("hit");
+      if (checkWin() != false) removeEventListeners();
     } else if (gameBoard.isValidAttack(x, y) == true) {
       removeEventListeners();
       cell.classList.add("miss");

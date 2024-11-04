@@ -11,7 +11,9 @@ const body = document.querySelector("body");
 renderEntryPage();
 let name = "";
 
-startButton.addEventListener("click", () => {
+startButton.addEventListener("click", startGame);
+
+function startGame() {
   name = document.querySelector("#name").value;
   const ships = [
     new Ship(5),
@@ -99,7 +101,7 @@ startButton.addEventListener("click", () => {
         let placed = false;
         while (!placed) {
           let direction = "vertical";
-          if (Math.random() == 0) {
+          if (Math.random() > 0.5) {
             direction = "horizontal";
           }
           placed = gameState.computer.gameBoard.placeShip(
@@ -108,6 +110,42 @@ startButton.addEventListener("click", () => {
             ship,
             direction,
           );
+        }
+      }
+
+      const winModal = document.createElement("dialog");
+
+      const winner = document.createElement("h1");
+      winner.id = "winner-header";
+
+      const playAgainText = document.createElement("p");
+      playAgainText.id = "play-text";
+      playAgainText.innerHTML = "Play again?";
+
+      const playAgainButton = document.createElement("button");
+      playAgainButton.innerHTML = "Start Game";
+      playAgainButton.addEventListener("click", startGame);
+
+      winModal.append(winner, playAgainText, playAgainButton);
+
+      body.appendChild(winModal);
+
+      winModal.close();
+
+      function checkWin() {
+        if (
+          gameState.player.gameBoard.shipTiles > 0 &&
+          gameState.computer.gameBoard.shipTiles > 0
+        )
+          return false;
+        if (gameState.player.gameBoard.shipTiles > 0) {
+          body.appendChild(winModal);
+          winner.innerHTML = name + " wins!";
+          winModal.show();
+        } else {
+          body.appendChild(winModal);
+          winner.innerHTML = "Computer wins!";
+          winModal.show();
         }
       }
 
@@ -122,22 +160,20 @@ startButton.addEventListener("click", () => {
           handleComputerAttack();
         } else {
           document.getElementById("" + x + y).classList.add("miss");
-          if (
-            gameState.player.gameBoard.shipTiles > 0 &&
-            gameState.computer.gameBoard.shipTiles > 0
-          )
-            startAttacks();
+          if (checkWin() == false) startAttacks();
         }
       }
 
-      const computerGameGrid = renderBoard(gameState.computer.gameBoard, false);
+      const computerGameGrid = renderBoard(gameState.computer.gameBoard, true);
       body.append(computerGameGrid);
 
       function startAttacks() {
         const setPlayerAttack = handleAttack(
           gameState.computer.gameBoard,
           handleComputerAttack,
+          checkWin,
         );
+
         setPlayerAttack();
       }
 
@@ -147,4 +183,4 @@ startButton.addEventListener("click", () => {
 
   window.addEventListener("keypress", handleRotation);
   gameState.removeListeners = handleShipPlacement();
-});
+}
