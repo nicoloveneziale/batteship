@@ -372,9 +372,13 @@ footer p {
 }
 
 .ship-hover {
-  background-color: red;
+  background-color: rgb(130, 230, 120);
 }
 
 .ship {
-  background-color: rgb(128, 0, 0);
+  background-color: rgb(15, 170, 28);
+}
+
+.currentBoard {
+  border: #ffffff 4px solid;
 }

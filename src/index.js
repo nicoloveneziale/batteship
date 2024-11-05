@@ -9,12 +9,14 @@ import handleAttack from "./handleAttack.js";
 
 const body = document.querySelector("body");
 renderEntryPage();
-let name = "";
 
-startButton.addEventListener("click", startGame);
+startButton.addEventListener("click", startGameInitial);
 
-function startGame() {
-  name = document.querySelector("#name").value;
+function startGameInitial() {
+  startGame(document.querySelector("#name").value);
+}
+
+function startGame(name) {
   const ships = [
     new Ship(5),
     new Ship(4),
@@ -124,7 +126,11 @@ function startGame() {
 
       const playAgainButton = document.createElement("button");
       playAgainButton.innerHTML = "Start Game";
-      playAgainButton.addEventListener("click", startGame);
+      playAgainButton.addEventListener("click", restartGame);
+
+      function restartGame() {
+        startGame(name);
+      }
 
       winModal.append(winner, playAgainText, playAgainButton);
 
@@ -149,17 +155,24 @@ function startGame() {
         }
       }
 
-      function handleComputerAttack() {
+      const delay = (delayInms) => {
+        return new Promise((reslove) => setTimeout(reslove, delayInms));
+      };
+
+      async function handleComputerAttack() {
+        computerGameGrid.classList.remove("currentBoard");
+        selectionGameGrid.classList.add("currentBoard");
         let [x, y] = [getRandomInt(0, 9), getRandomInt(0, 9)];
         while (gameState.player.gameBoard.isValidAttack(x, y) != true) {
           [x, y] = [getRandomInt(0, 9), getRandomInt(0, 9)];
         }
-        console.log("" + x + y);
+        await delay(2000);
         if (gameState.player.gameBoard.receiveAttack(x, y) === true) {
           document.getElementById("" + x + y).classList.add("hit");
           handleComputerAttack();
         } else {
           document.getElementById("" + x + y).classList.add("miss");
+          selectionGameGrid.classList.remove("currentBoard");
           if (checkWin() == false) startAttacks();
         }
       }
@@ -168,10 +181,12 @@ function startGame() {
       body.append(computerGameGrid);
 
       function startAttacks() {
+        computerGameGrid.classList.add("currentBoard");
         const setPlayerAttack = handleAttack(
           gameState.computer.gameBoard,
           handleComputerAttack,
           checkWin,
+          delay,
         );
 
         setPlayerAttack();
