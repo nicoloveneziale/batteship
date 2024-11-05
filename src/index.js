@@ -40,7 +40,11 @@ function startGame(name) {
   placeText.innerHTML = `Place your ships ${name}!`;
   placeText.id = "place-text";
 
-  body.append(placeText, selectionGameGrid);
+  const rotateText = document.createElement("p");
+  rotateText.innerHTML = "Press R to rotate your ships";
+  rotateText.id = "rotate-text";
+
+  body.append(placeText, selectionGameGrid, rotateText);
   body.classList.add("flex-col");
 
   function handleRotation(event) {
@@ -137,6 +141,7 @@ function startGame(name) {
 
       const playAgainButton = document.createElement("button");
       playAgainButton.innerHTML = "Start Game";
+      playAgainButton.id = "play-again";
       playAgainButton.addEventListener("click", restartGame);
 
       function restartGame() {
@@ -184,6 +189,7 @@ function startGame(name) {
           document.getElementById("" + x + y).classList.add("hit");
           await delay(700);
           handleComputerAttack();
+          await delay(700);
         } else {
           gameText.innerHTML = "... and misses";
           document.getElementById("" + x + y).classList.add("miss");
@@ -194,7 +200,7 @@ function startGame(name) {
         }
       }
 
-      const computerGameGrid = renderBoard(gameState.computer.gameBoard, true);
+      const computerGameGrid = renderBoard(gameState.computer.gameBoard, false);
       boardDiv.append(computerGameGrid);
 
       function startAttacks() {

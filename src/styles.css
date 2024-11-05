@@ -252,7 +252,7 @@ footer p {
   grid-template-rows: repeat(10, 1fr);
   gap: 2px;
   width: 100%;
-  max-width: 80vmin;
+  max-width: 70vmin;
   aspect-ratio: 1 / 1;
   background: linear-gradient(
     145deg,
@@ -352,7 +352,8 @@ footer p {
 }
 
 #place-text,
-#game-text {
+#game-text,
+#rotate-text {
   font-size: 2rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -394,4 +395,53 @@ footer p {
 
 .player-board {
   pointer-events: none;
+}
+
+dialog {
+  background-color: #0a1014;
+  color: #fff;
+  border: 2px solid #4a9eff;
+  border-radius: 5px;
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  display: none;
+  box-shadow:
+    0 0 30px rgba(0, 0, 0, 0.5),
+    inset 0 0 15px rgba(74, 158, 255, 0.1);
+}
+
+dialog[open] {
+  display: block;
+}
+
+h1#winner-header {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: #4a9eff;
+  text-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+}
+
+p#play-text {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #4a9eff;
+  text-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+}
+
+button#play-again {
+  background-color: #4a9eff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: white;
+  font-weight: bold;
+}
+
+button#play-again:hover {
+  background-color: #357abd;
 }
