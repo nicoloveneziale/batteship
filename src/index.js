@@ -80,9 +80,20 @@ function startGame(name) {
       window.removeEventListener("keypress", handleRotation);
 
       body.innerHTML = "";
-      body.classList.remove("flex-col");
-      body.classList.add("flex-row");
-      body.append(selectionGameGrid);
+
+      const gameText = document.createElement("h1");
+      gameText.id = "game-text";
+
+      gameText.innerHTML = "Your attack first " + gameState.player.name + "!";
+
+      const boardDiv = document.createElement("div");
+      boardDiv.classList.add("flex-row");
+
+      selectionGameGrid.classList.add("player-board");
+      boardDiv.appendChild(selectionGameGrid);
+      boardDiv.id = "board-div";
+
+      body.append(gameText, boardDiv);
 
       let computerShips = [
         new Ship(5),
@@ -162,23 +173,29 @@ function startGame(name) {
       async function handleComputerAttack() {
         computerGameGrid.classList.remove("currentBoard");
         selectionGameGrid.classList.add("currentBoard");
+        gameText.innerHTML = "The computer attacks...";
         let [x, y] = [getRandomInt(0, 9), getRandomInt(0, 9)];
         while (gameState.player.gameBoard.isValidAttack(x, y) != true) {
           [x, y] = [getRandomInt(0, 9), getRandomInt(0, 9)];
         }
         await delay(2000);
         if (gameState.player.gameBoard.receiveAttack(x, y) === true) {
+          gameText.innerHTML = "... and hits your ship";
           document.getElementById("" + x + y).classList.add("hit");
+          await delay(700);
           handleComputerAttack();
         } else {
+          gameText.innerHTML = "... and misses";
           document.getElementById("" + x + y).classList.add("miss");
           selectionGameGrid.classList.remove("currentBoard");
+          await delay(700);
+          gameText.innerHTML = "Its your attack now...";
           if (checkWin() == false) startAttacks();
         }
       }
 
       const computerGameGrid = renderBoard(gameState.computer.gameBoard, true);
-      body.append(computerGameGrid);
+      boardDiv.append(computerGameGrid);
 
       function startAttacks() {
         computerGameGrid.classList.add("currentBoard");
@@ -187,6 +204,7 @@ function startGame(name) {
           handleComputerAttack,
           checkWin,
           delay,
+          gameText,
         );
 
         setPlayerAttack();

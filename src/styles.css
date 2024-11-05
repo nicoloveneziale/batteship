@@ -351,7 +351,8 @@ footer p {
   justify-content: center;
 }
 
-#place-text {
+#place-text,
+#game-text {
   font-size: 2rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -381,4 +382,16 @@ footer p {
 
 .currentBoard {
   border: #ffffff 4px solid;
+}
+
+#board-div {
+  width: 70vw;
+}
+
+#board-div div {
+  margin: 2vw;
+}
+
+.player-board {
+  pointer-events: none;
 }
